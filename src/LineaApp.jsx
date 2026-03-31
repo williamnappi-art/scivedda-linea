@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  "https://psouhrqpuuetspajpjpj.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzb3VocnFwdXVldHNwYWpwanBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NTM5NDQsImV4cCI6MjA2MzIyOTk0NH0.nPKCBq2XbEByjCrSeGGBe2r4UuRWNvTG0bx5hmVmAbs"
+  "https://gzqkzognzapilpvduelj.supabase.co",
+  "sb_publishable_CoJ9ZnMUNwQb57UzAWKJMQ_N9LHylV0"
 );
 
 const DASHBOARD_URL = "https://scivedda-bowl-order.vercel.app/admin";
@@ -471,8 +471,11 @@ export default function LineaApp() {
 
   function removeCustomItem(sectionId, itemId) {
     const nextCustom = { ...customItems, [sectionId]: (customItems[sectionId] || []).filter(i => i.id !== itemId) };
+    const nextToOrder = { ...toOrder };
+    delete nextToOrder[itemId];
     setCustomItems(nextCustom);
-    syncState({ statuses, qtys, customItems: nextCustom, extras });
+    setToOrder(nextToOrder);
+    syncState({ statuses, qtys, customItems: nextCustom, extras, toOrder: nextToOrder });
   }
 
   function addExtra() {
