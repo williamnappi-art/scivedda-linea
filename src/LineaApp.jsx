@@ -144,6 +144,7 @@ function formatDate(d) {
 // Piccolo tasto ✏ in basso a destra per editare la quantità
 
 function IngredCard({ item, status, qty, onTap, onEditQty, onRemove }) {
+  const dragRef = useRef(null);
   const bg =
     status === "green" ? "#2d7a2d" :
     status === "red"   ? "#c0392b" :
@@ -163,7 +164,14 @@ function IngredCard({ item, status, qty, onTap, onEditQty, onRemove }) {
 
   return (
     <div
-      onPointerDown={e => { e.preventDefault(); onTap(); }}
+      onPointerDown={e => { dragRef.current = { x: e.clientX, y: e.clientY }; }}
+      onPointerUp={e => {
+        if (!dragRef.current) return;
+        const dx = Math.abs(e.clientX - dragRef.current.x);
+        const dy = Math.abs(e.clientY - dragRef.current.y);
+        dragRef.current = null;
+        if (dx < 8 && dy < 8) onTap();
+      }}
       style={{
         background: bg,
         border: `2px solid ${border}`,
@@ -223,7 +231,7 @@ function IngredCard({ item, status, qty, onTap, onEditQty, onRemove }) {
 
       {/* Tasto modifica quantità */}
       <button
-        onPointerDown={e => { e.stopPropagation(); e.preventDefault(); onEditQty(); }}
+        onClick={e => { e.stopPropagation(); onEditQty(); }}
         style={{
           position: "absolute",
           bottom: 6,
@@ -247,7 +255,7 @@ function IngredCard({ item, status, qty, onTap, onEditQty, onRemove }) {
       {/* × rimuovi (solo custom) */}
       {onRemove && (
         <button
-          onPointerDown={e => { e.stopPropagation(); e.preventDefault(); onRemove(); }}
+          onClick={e => { e.stopPropagation(); onRemove(); }}
           style={{
             position: "absolute",
             top: 6,
