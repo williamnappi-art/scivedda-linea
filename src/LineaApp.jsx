@@ -121,7 +121,7 @@ const SECTIONS = [
 ];
 
 function getDateKey() {
-  return new Date().toISOString().slice(0, 10);
+  return "linea";
 }
 
 function getGreeting() {
@@ -323,9 +323,7 @@ function loadLocalState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed.dateKey !== getDateKey()) return null;
-    return parsed;
+    return JSON.parse(raw);
   } catch { return null; }
 }
 
