@@ -6,7 +6,7 @@ const supabase = createClient(
   "sb_publishable_CoJ9ZnMUNwQb57UzAWKJMQ_N9LHylV0"
 );
 
-const DASHBOARD_URL = "https://scivedda-bowl-order.vercel.app/admin";
+const DASHBOARD_URL = "https://scivedda-bowl-order.vercel.app/";
 // ID sessione univoco per evitare loop Realtime
 const SESSION_ID = Math.random().toString(36).slice(2);
 
