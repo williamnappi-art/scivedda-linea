@@ -672,7 +672,7 @@ export default function LineaApp() {
               <span style={{ fontFamily: "Jaapokki, sans-serif", fontSize: 15, color: "#d4763c", letterSpacing: 1 }}>DA ORDINARE</span>
               <span style={{ fontSize: 11, color: "#bbb", marginLeft: 2 }}>{Object.keys(toOrder).length} voci</span>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                   "🛒 *LISTA ORDINI SCIVEDDA*\n\n" +
                   Object.entries(toOrder).map(([, { name, sectionLabel }]) => `• ${name} (${sectionLabel})`).join("\n") +
                   "\n\n_Inviato da Scivedda Linea_"
