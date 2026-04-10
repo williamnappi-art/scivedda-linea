@@ -118,6 +118,12 @@ const SECTIONS = [
       { id: "wakame", name: "Alga Wakame" },
     ],
   },
+  {
+    id: "altro",
+    label: "ALTRO",
+    icon: "📋",
+    items: [],
+  },
 ];
 
 function getDateKey() {
@@ -487,10 +493,16 @@ export default function LineaApp() {
   function addExtra() {
     const text = newExtra.trim();
     if (!text) return;
-    const nextExtras = [...extras, { id: Date.now(), text }];
+    const nextExtras = [...extras, { id: Date.now(), text, done: false }];
     setExtras(nextExtras);
     syncState({ statuses, qtys, customItems, extras: nextExtras });
     setNewExtra("");
+  }
+
+  function toggleExtra(id) {
+    const nextExtras = extras.map(e => e.id === id ? { ...e, done: !e.done } : e);
+    setExtras(nextExtras);
+    syncState({ statuses, qtys, customItems, extras: nextExtras });
   }
 
   function removeExtra(id) {
@@ -601,14 +613,21 @@ export default function LineaApp() {
           <div style={{ fontSize: 11, fontWeight: 700, color: "#bbb", letterSpacing: 2, marginBottom: 10 }}>📋 ALTRO</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {extras.map(item => (
-              <div key={item.id} style={{
-                background: "#faf7f2", border: "1px solid #e8e0d4", borderRadius: 10,
-                padding: "10px 14px", display: "flex", alignItems: "center", gap: 10,
-              }}>
-                <span style={{ flex: 1, fontSize: 15, color: "#333" }}>{item.text}</span>
+              <div
+                key={item.id}
+                onClick={() => toggleExtra(item.id)}
+                style={{
+                  background: item.done ? "#2d7a2d" : "#faf7f2",
+                  border: `1px solid ${item.done ? "#4caf50" : "#e8e0d4"}`,
+                  borderRadius: 10,
+                  padding: "10px 14px", display: "flex", alignItems: "center", gap: 10,
+                  cursor: "pointer",
+                }}>
+                <span style={{ flex: 1, fontSize: 15, color: item.done ? "#fff" : "#333", textDecoration: item.done ? "line-through" : "none" }}>{item.text}</span>
+                {item.done && <span style={{ fontSize: 14, color: "#fff" }}>✅ Fatto!</span>}
                 <button
-                  onClick={() => removeExtra(item.id)}
-                  style={{ background: "none", border: "none", color: "#ccc", fontSize: 20, lineHeight: 1, cursor: "pointer", padding: "0 2px" }}
+                  onClick={e => { e.stopPropagation(); removeExtra(item.id); }}
+                  style={{ background: "none", border: "none", color: item.done ? "rgba(255,255,255,0.5)" : "#ccc", fontSize: 20, lineHeight: 1, cursor: "pointer", padding: "0 2px" }}
                 >×</button>
               </div>
             ))}
