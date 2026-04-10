@@ -132,9 +132,13 @@ function getDateKey() {
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h >= 5 && h < 12) return "Buongiorno 🌅";
-  if (h >= 12 && h < 18) return "Buon pomeriggio ☀️";
-  return "Buonasera 🌙";
+  if (h >= 5 && h < 18) return "Buongiorno";
+  return "Buonasera";
+}
+
+function isDay() {
+  const h = new Date().getHours();
+  return h >= 5 && h < 18;
 }
 
 function formatTime(d) {
@@ -573,40 +577,63 @@ export default function LineaApp() {
       <div style={{ padding: "0 14px" }}>
 
         {/* ─── Hero ─── */}
-        <div style={{
-          background: "linear-gradient(135deg, #1a1a1a 0%, #231b14 100%)",
-          border: "1px solid #2e2218", borderRadius: 16,
-          padding: "18px 22px", marginTop: 16,
-          display: "flex", flexWrap: "wrap", gap: 12,
-          alignItems: "center", justifyContent: "space-between",
-        }}>
-          <div>
-            <div style={{ fontFamily: "Jaapokki, sans-serif", fontSize: 24, color: "#d4763c" }}>{getGreeting()}</div>
-            <div style={{ fontSize: 12, color: "#666", marginTop: 3, textTransform: "capitalize" }}>{formatDate(now)}</div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontFamily: "Jaapokki, sans-serif", fontSize: 42, color: "#f5f0e8", letterSpacing: 3, lineHeight: 1 }}>
-              {formatTime(now)}
+        {(() => {
+          const day = isDay();
+          return (
+            <div style={{
+              background: day
+                ? "linear-gradient(135deg, #7ec8e3 0%, #a8d8ea 100%)"
+                : "linear-gradient(135deg, #1a1a1a 0%, #231b14 100%)",
+              border: day ? "1px solid #5bb3cf" : "1px solid #2e2218",
+              borderRadius: 16,
+              padding: "18px 22px", marginTop: 16,
+              display: "flex", flexWrap: "wrap", gap: 12,
+              alignItems: "center", justifyContent: "space-between",
+              position: "relative", overflow: "hidden",
+            }}>
+              {day && (
+                <div style={{
+                  position: "absolute", top: 8, right: 0, left: 0,
+                  display: "flex", justifyContent: "flex-end", gap: 10,
+                  padding: "0 16px", pointerEvents: "none", opacity: 0.35,
+                }}>
+                  <span style={{ fontSize: 28 }}>☁️</span>
+                  <span style={{ fontSize: 20, marginTop: 8 }}>☁️</span>
+                  <span style={{ fontSize: 24, marginTop: 2 }}>☁️</span>
+                </div>
+              )}
+              <div>
+                <div style={{ fontFamily: "Jaapokki, sans-serif", fontSize: 24, color: day ? "#1a3a4a" : "#d4763c" }}>
+                  {getGreeting()}
+                </div>
+                <div style={{ fontSize: 12, color: day ? "#2a6070" : "#666", marginTop: 3, textTransform: "capitalize" }}>{formatDate(now)}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontFamily: "Jaapokki, sans-serif", fontSize: 42, color: day ? "#1a3a4a" : "#f5f0e8", letterSpacing: 3, lineHeight: 1 }}>
+                  {formatTime(now)}
+                </div>
+                <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "flex-end", flexWrap: "wrap" }}>
+                  <span style={{
+                    background: "#2d7a2d", color: "#fff",
+                    borderRadius: 20, padding: "4px 10px",
+                    fontSize: 13, fontWeight: 700,
+                  }}>✅ {greenCount} fatti</span>
+                  <span style={{
+                    background: "#c0392b", color: "#fff",
+                    borderRadius: 20, padding: "4px 10px",
+                    fontSize: 13, fontWeight: 700,
+                  }}>⚠ {redCount} da fare</span>
+                  <span style={{
+                    background: day ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)",
+                    color: day ? "#2a6070" : "#aaa",
+                    borderRadius: 20, padding: "4px 10px",
+                    fontSize: 13, fontWeight: 600,
+                  }}>— {totalCount - greenCount - redCount}</span>
+                </div>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "flex-end", flexWrap: "wrap" }}>
-              <span style={{
-                background: "#2d7a2d", color: "#fff",
-                borderRadius: 20, padding: "4px 10px",
-                fontSize: 13, fontWeight: 700,
-              }}>✅ {greenCount} fatti</span>
-              <span style={{
-                background: "#c0392b", color: "#fff",
-                borderRadius: 20, padding: "4px 10px",
-                fontSize: 13, fontWeight: 700,
-              }}>⚠ {redCount} da fare</span>
-              <span style={{
-                background: "rgba(255,255,255,0.1)", color: "#aaa",
-                borderRadius: 20, padding: "4px 10px",
-                fontSize: 13, fontWeight: 600,
-              }}>— {totalCount - greenCount - redCount}</span>
-            </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* ─── Altro ─── */}
         <div style={{ background: "#fff", border: "1px solid #e8e0d4", borderRadius: 14, padding: "14px 18px", marginTop: 12 }}>
